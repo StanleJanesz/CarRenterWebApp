@@ -1,0 +1,21 @@
+﻿<div class="single-model-search">
+    <h2>@h2Text</h2>
+    <div class="model-select-icon">
+    <select id="brand" @onchange="OnChange" disabled="@Disabled" class="form-control">
+        <option value="">Select a @type</option>
+        @foreach (var brand in List)
+        {
+            <option value="@brand">@brand</option>
+        }
+    </select>
+    </div>
+</div>
+@code {
+	[Parameter] public List<string> List { get; set; } = new List<string>();
+	[Parameter] public EventCallback<ChangeEventArgs> OnChange { get; set; }
+	[Parameter] public bool Disabled { get; set;} = false;
+	[Parameter] public string type { get; set; } = "";
+    [Parameter] public string h2Text { get; set; } = "";
+}
+
+

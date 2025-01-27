@@ -1,0 +1,227 @@
+﻿@page "/OffertView"
+@using CarRenter.Client.Classes
+@rendermode InteractiveWebAssembly
+@inject CarService CarService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+<PageTitle>OffertView</PageTitle>
+
+<h1>OffertsLists</h1>
+
+<h3> tutaj jest oferta samochodu ze szczególłami w zalerzności od zalogowania można zamówić (rent me ) </h3>
+<hr />
+<hr />
+<h4> dla ułatwienia wersji roboczej wszystkie strony są wylistowane w lewym menu w przyszłosci zostanie wprowadzony poprawny routing</h4>
+<hr />
+<hr />
+
+ <h4>Selected Car Details</h4>
+@if (CarService.SelectedCar != null)
+{
+    <p>@CarService.SelectedCar.brand</p>
+    <p>@CarService.SelectedCar.model</p>
+    <p><strong>Production Year:</strong> @CarService.SelectedCar.productionYear</p>
+
+}
+else
+{
+    <p>No car selected.</p>
+}
+<div >
+
+    <table id="cars">
+        <thead>
+            <tr>
+                <th scope="col">image</th>
+                <th scope="col">company</th>
+                <th scope="col">price</th>
+                <th scope="col">rent</th>
+            </tr>
+        </thead>
+
+
+        <tbody>
+            @for (int i = ppage; i < Math.Min(ppage + 5, maxpages); i++)
+            {
+                var value = i;
+                <tr>
+
+                    <td>Image</td>
+                    <td>@offers[i].User</td>
+                    <td>@offers[i].price</td>
+                    <td>
+                        <div class="tooltip-wrapper">
+                        <button @onclick="() => OnClickHandler(value)" disabled="@(!loggedin)">
+                            Rent from here
+                        </button>
+                        <div class="tooltip">Zaloguj sie aby skorzystać</div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+</div>
+<div class="pagination">
+    <a @onclick="Left" >&laquo;</a>
+    @for(int i = 0; i < maxpages / 5+Math.Min(maxpages%5,1); i++)
+    {
+        var value = i;
+        if (ppage / 5  == i)
+        {
+            <a class="active" @onclick="()=> Paging(value)">@(i + 1)</a>
+        }
+        else
+        {
+            <a  @onclick="()=> Paging(value)">@(i + 1)</a>
+        }
+    }
+    <a @onclick="Right">&raquo;</a>
+</div>
+@code{
+    List<Offer> offers;
+    private int ppage = 0;
+    private int maxpages = 0;
+    private bool loggedin = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            CarService.SelectedCar = await LocalStorage.GetItemAsync<Car>("selectedCar");
+            offers = Offer.GetOffersFor(CarService.SelectedCar.model, CarService.SelectedCar.brand);
+            maxpages = offers.Count();
+            ppage = 0;
+            StateHasChanged();
+        }
+
+    }
+    private  async void OnClickHandler(int i)
+    {
+        //send the email
+    }
+    private async void Paging(int i)
+    {
+        ppage = i * 5;
+    }
+    private void Right(MouseEventArgs e)
+    {
+        if (ppage+5  < maxpages)
+        {
+            ppage += 5;
+        }
+    }
+    private void Left(MouseEventArgs e)
+    {
+        if (ppage > 0)
+        {
+            ppage -= 5;
+        }
+    }
+}
+@* przesunąć do folderu style*@
+<style>
+    /* Pagination links */
+    .pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+    }
+
+        /* Style the active/current link */
+        .pagination a.active {
+            background-color: dodgerblue;
+            color: white;
+        }
+
+        /* Add a grey background color on mouse-over */
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+    table {
+        border-collapse: collapse;
+        border: 2px solid rgb(140 140 140);
+        font-family: sans-serif;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    caption {
+        caption-side: bottom;
+        padding: 10px;
+        font-weight: bold;
+    }
+
+    thead,
+    tfoot {
+        background-color: rgb(228 240 245);
+    }
+
+    th,
+    td {
+        border: 1px solid rgb(160 160 160);
+        padding: 8px 10px;
+    }
+
+        td:last-of-type {
+            text-align: center;
+        }
+
+    tbody > tr:nth-of-type(even) {
+        background-color: rgb(237 238 242);
+    }
+
+    tfoot th {
+        text-align: right;
+    }
+
+    tfoot td {
+        font-weight: bold;
+    }
+
+    .tooltip-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip {
+        visibility: hidden;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 4px;
+        padding: 5px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%; /* Position above the button */
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .tooltip-wrapper:hover .tooltip {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .tooltip::after {
+        content: '';
+        position: absolute;
+        top: 100%; /* Arrow pointing downwards */
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    button[disabled] {
+        cursor: not-allowed;
+    }
+</style>

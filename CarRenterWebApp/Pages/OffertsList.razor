@@ -1,0 +1,108 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@using Blazored.LocalStorage
+@inject ILocalStorageService localStorage
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims;
+@using CarRenterWebApp.Classes
+@inject CarService CarService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavManager
+@using System.Text.Json;
+@using CarRenterWebApp.Components;
+@inject NavigationManager Navigation
+<PageTitle>OffertsLists</PageTitle>
+<Loading IsLoading="@isLoading" />
+
+<section id="home" class="welcome-hero">
+        <div class="container">
+            <div class="welcome-hero-txt">
+                <h2>get your desired car in resonable price</h2>
+                <p>
+
+                </p>
+
+            </div>
+        </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            <div class="model-search-content">
+                <div class="row">
+                    <div class="col-md-offset-1 col-md-2 col-sm-12">
+        
+                        <SimpleChoiceBox OnChange="OnBrandChange" List="brands" type="brand" h2Text="Choose a Brand:"></SimpleChoiceBox>
+
+                        <SimpleChoiceBox List="models" Disabled="@(!models.Any())" OnChange="OnModelChange" type="model" h2Text="Choose a Model:"></SimpleChoiceBox>
+                    </div>
+                    <div class="col-md-offset-1 col-md-2 col-sm-12">
+
+                        <SimpleChoiceBox List="localizations" OnChange="OnLocalizationChange" type="localization" h2Text="Choose a localization:"></SimpleChoiceBox>
+
+                        <SortBox Type_="@typeof(Car)" h2Text="Sort by:" Sorted="@((System.Collections.Generic.IEnumerable<object>)currentCars)" Descriptions="@(["Brands from A","Brands from Z"])" Qualities="@(["Brand"])" Change="ChangeSortBox"></SortBox>
+                    </div>
+                    <div class="col-md-offset-1 col-md-2 col-sm-12">
+                        <h2 for="start">Start date:</h2>
+                        <input type="date" id="start" name="trip-start" value="@start" min="@DateTime.Now.ToString("yyyy-MM-dd")" @onchange="OnStartDateChange" class="form-control" />
+                        <h2 for="end">End date:</h2>
+                        <input type="date" id="end" name="trip-end" value="@end" min="@start" @onchange="OnEndDateChange"class="form-control" />
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="service" class="service">
+    <div class="container">
+        <div class="service-content">
+            <div class="row">
+                @if (currentCars.Count == 0)
+                {
+                    <p> No cars found </p>
+                }
+                else
+                {
+                    @for (int i = currentPage * pageAmount; i < PageLimit(); i++)
+                    {
+                        var value = i;
+                        <div class="car-listing">
+                            @if (currentCarsPhotos.Count <= i || currentCarsPhotos[i] == null)
+                            {
+                                <img src="sample-data//CarImageFill.jpg" alt="Car">
+                            }
+                            else
+                            {
+                                <img src="data:image;base64, @System.Convert.ToBase64String(currentCarsPhotos[i])" alt="Car">
+                            }
+                            <span class="car-brand">@currentCars[i].Brand</span>
+                            <span class="car-model">@currentCars[i].Model</span>
+                            @if (IsDateValid())
+                            {
+                                <NavLink class="nav-link" @onclick="() => OnClickHandler(value)">
+                                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> View offers
+                                </NavLink>
+                            }
+                            else
+                            {
+                                <span class="nav-link" title="Please correct the dates">
+                                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Correct the Date
+                                </span>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+            
+        </div>
+    </div>
+</section>
+<Paging maxPages="@maxPages" currentPage="@currentPage" OnChange="@OnPageChange"></Paging>
+
+
+
+
+
+

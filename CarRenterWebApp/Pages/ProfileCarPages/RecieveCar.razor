@@ -1,0 +1,50 @@
+﻿<div style="background-color:black;height:120px;"></div>
+@page "/RecieveCar"
+@using CarRenterWebApp.Classes
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<div class="container">
+    <AuthorizeView Roles=@UserAuth.workerRole>
+        <Authorized>
+            <div>
+                @if (rental != null)
+                {   
+                    <div class="car-details">
+                        <h1> Car Details </h1>
+                        @if (carPhoto == null)
+                        {
+                            <img src="sample-data//CarImageFill.jpg" alt="Car" height="60" width="100">
+                        }
+                        else
+                        {
+                            <img src="data:image;base64, @System.Convert.ToBase64String(carPhoto)" alt="Car" height="60" width="100">
+                        }
+                        <div class="car-brand">@rental.Car.Brand</div>
+                        <div class="car-model">@rental.Car.Model</div>
+                        <div class="return-date">Car was returned on @rental.RentalEndDate.ToShortDateString()</div>
+                        <label for="photo" class="form-label">Zdjecie pojazdu</label>
+                        <InputFile id="photo" name="photo" class="form-input" placeholder="wstaw zdjecie" accept="image/*" OnChange="HandleFileSelected" />
+                        <label for="notes" class="form-label">Additional Notes</label>
+                        <textarea id="notes" name="notes" class="form-input" placeholder="Write additional notes here..." @bind="notes"></textarea>
+                        <button class="return-button" @onclick="OnClick">Recieve Car</button>
+                        <NavLink class="nav-link" href="UserProfilePage">
+                            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> powróć
+                        </NavLink>
+                    </div>
+                }
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            You are Not Authorized
+        </NotAuthorized>
+        <Authorizing>
+            <p>Authorizing...</p>
+        </Authorizing>
+    </AuthorizeView>
+</div>
+
+<style>
+
+</style>  

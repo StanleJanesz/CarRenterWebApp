@@ -1,0 +1,124 @@
+﻿<div style="background-color:black;height:120px;"></div>
+@page "/RentalHistory"
+@using CarRenterWebApp.Classes
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+<div class="container">
+    <AuthorizeView Roles=@UserAuth.readerRole>
+        <Authorized>
+            <div>
+                @if (rental != null)
+                {
+                    
+                    <div class="car-details">
+                        <h1> Car Details </h1>
+                        @if (carPhoto == null)
+                        {
+                            <img src="sample-data//CarImageFill.jpg" alt="Car" height="60" width="100">
+                        }
+                        else
+                        {
+                            <img src="data:image;base64, @System.Convert.ToBase64String(carPhoto)" alt="Car" height="60" width="100">
+                        }
+                        <div class="car-brand">@rental.Car.Brand</div>
+                        <div class="car-model">@rental.Car.Model</div>
+                        <div class="return-date">Car was rented on @rental.RentalStartDate.ToShortDateString()</div>
+                        <div class="return-date">Car was returned @rental.RentalEndDate.ToShortDateString()</div>
+                     
+                        <NavLink class="nav-link" href="UserProfilePage">
+                            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> powróć
+                        </NavLink>
+                    </div>
+                }
+            </div>
+        </Authorized>
+            <NotAuthorized>
+
+            </NotAuthorized>
+            <Authorizing>
+                <p>Authorizing...</p>
+            </Authorizing>
+        </AuthorizeView>
+    <AuthorizeView Roles=@UserAuth.workerRole>
+        <Authorized>
+            <div>
+                @if (rental != null)
+                {
+
+                    <div class="car-details">
+                        <h1> Car Details </h1>
+                        <div class="car-brand">@rental.Car.Brand</div>
+                        <div class="car-model">@rental.Car.Model</div>
+                        <div class="return-date">Car was rented on @rental.RentalStartDate.ToShortDateString()</div>
+                        <div class="return-date">Car was returned @rental.RentalEndDate.ToShortDateString()</div>
+
+                        <NavLink class="nav-link" href="UserProfilePage">
+                            <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> powróć
+                        </NavLink>
+                    </div>
+                }
+            </div>
+        </Authorized>
+        <NotAuthorized>
+
+        </NotAuthorized>
+        <Authorizing>
+            <p>Authorizing...</p>
+        </Authorizing>
+    </AuthorizeView>
+</div>
+
+<style>
+    .car-details {
+        background-color: #f9f9f9; /* Light background for contrast */
+        border: 1px solid #ddd; /* Light border */
+        border-radius: 8px; /* Rounded corners */
+        padding: 20px; /* Spacing inside the container */
+        margin: 20px; /* Spacing outside the container */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    /* Car brand and model styling */
+    .car-brand,
+    .car-model {
+        font-size: 1.5em; /* Larger font size for emphasis */
+        color: #333; /* Darker text color */
+        margin: 10px 0; /* Spacing between elements */
+    }
+
+    /* Return date styling */
+    .return-date {
+        font-size: 1em; /* Standard font size */
+        color: #666; /* Lighter text color */
+        margin-bottom: 20px; /* Spacing below the return date */
+    }
+
+    /* Button styling */
+    .return-button {
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white; /* White text */
+        border: none; /* No border */
+        border-radius: 5px; /* Rounded corners */
+        padding: 10px 15px; /* Padding inside the button */
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: background-color 0.3s; /* Smooth transition */
+    }
+
+        .return-button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+        }
+
+    /* Navigation link styling */
+    .nav-link {
+        display: inline-block; /* Inline block for spacing */
+        margin-top: 10px; /* Spacing above the link */
+        color: #007bff; /* Link color */
+        text-decoration: none; /* No underline */
+    }
+
+        .nav-link:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+</style>
+

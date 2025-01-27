@@ -1,0 +1,40 @@
+﻿@using System.Reflection
+@using System.Diagnostics
+<div class="single-model-search">
+    <h2>@h2Text</h2>
+    <select @onchange="OnSelectChange" class="form-control">
+        <option value="" selected disabled hidden>Sort by</option>
+        @for (int i = 0; i < Qualities.Count(); i++)
+        {
+            var j = i;
+            <option value="@(j*2)">@Descriptions[j * 2]</option>
+            <option value="@(j*2+1)">@Descriptions[j * 2 + 1]</option>
+        }
+    </select>
+</div>
+
+@code {
+    [Parameter] public Type Type_{ get; set; }
+    [Parameter] public IEnumerable<object> Sorted{ get; set; }
+    [Parameter] public string[] Qualities{ get; set; }
+    [Parameter] public string[] Descriptions{ get; set; }
+    [Parameter] public EventCallback<IEnumerable<object>> Change { get; set; }
+    [Parameter] public string h2Text { get; set; } = "";
+    List<object> a = new List<object>();
+    private void OnSelectChange(ChangeEventArgs e)
+    {
+        int selectedValue = int.Parse(e.Value.ToString());
+        OnChange(selectedValue);
+    }
+    public void OnChange(int i){
+        var j = (i - i % 2) / 2;
+        PropertyInfo propertyInfo = Type_.GetProperty(Qualities[j], BindingFlags.Public | BindingFlags.Instance);
+        Sorted = Sorted.OrderBy(item => propertyInfo.GetValue(item, null).ToString());
+        if(i%2==1){
+            Sorted=Sorted.Reverse();
+        }
+        Change.InvokeAsync(Sorted);
+
+    }
+}
+

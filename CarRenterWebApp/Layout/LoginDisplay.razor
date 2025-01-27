@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Navigation
+@using Blazored.LocalStorage
+@inject ILocalStorageService localStorage
+@using Microsoft.AspNetCore.Components.Authorization;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims;
+@using CarRenterWebApp.Classes;
+<div class="collapse navbar-collapse menu-ui-design" id="navbar-menu">
+    <AuthorizeView>
+        <Authorized>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="scroll" href="UserProfilePage">
+                    <a href="UserProfilePage">
+                        Hello, @context.User.Identity?.Name
+                    </a>
+@*                     <img src="@context.User.FindFirst("picture")?.Value" width="22" height="22" class="@StyleHidden" onclick="" /> *@
+                </li>
+                <li class="scroll">
+                    <a class="scroll" @onclick="BeginLogOut">Log out</a>
+                </li>
+            </ul>
+        </Authorized>
+        <NotAuthorized>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="scroll"><a href="authentication/login">Log in</a></li>
+            </ul>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    public async void BeginLogOut()
+    {
+        Navigation.NavigateToLogout("authentication/logout");
+        await InvokeAsync(StateHasChanged);
+    }
+    private string StyleHidden { get; set; } = "invisible";
+    private int Numer { get; set; }
+    private Timer? _timer;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var logUser = authState.User;
+        var rolew = logUser.FindFirst(ClaimTypes.Role);
+        if (logUser.Identity.IsAuthenticated && rolew == null)
+        {
+           // await UserAuth.SetRole(logUser);
+            await InvokeAsync(StateHasChanged);
+        }
+        if (firstRender)
+        {
+            StyleHidden = "d-inline-block rounded-circle border-0";
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+
+}

@@ -1,0 +1,61 @@
+﻿<div style="background-color:black;height:120px;"></div>
+<h3>RegistrationPage</h3>
+@page "/RegistrationPage"
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<PageTitle>RegistrationPage</PageTitle>
+<title>Car Renting Website - Register</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+
+<div class="container">
+    <div class="form-container">
+  
+
+            <h2 class="form-title">Register</h2>
+            <EditForm EditContext="editContext" OnValidSubmit="Submit">
+                <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="dob" class="form-label">Date of Birth</label>
+                <InputDate @bind-Value="user.BirthDate" class="form-input" />
+                <ValidationMessage For="@(() => user.BirthDate)" />
+            </div>
+
+            <div class="form-group">
+                <label for="licenseDate" class="form-label">Date of Getting Driver's License</label>
+                <InputDate @bind-Value="user.LicenseDate" class="form-input" />
+                <ValidationMessage For="@(() => user.LicenseDate)" />
+            </div>
+
+            <div class="form-group">
+                <label for="country" class="form-label">Country</label>
+                <InputText @bind-Value="country" class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="city" class="form-label">City</label>
+                <InputText @bind-Value="city" class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="street" class="form-label">Street</label>
+                <InputText @bind-Value="street" class="form-input" />
+            </div>
+
+            <div class="form-group">
+                <label for="houseNumber" class="form-label">House Number</label>
+                <InputText @bind-Value="houseNumber" class="form-input" />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">Save Changes</button>
+                <button type="reset" class="btn btn-cancel">Cancel</button>
+            </div>
+        </EditForm>
+        
+ 
+    </div>
+</div>

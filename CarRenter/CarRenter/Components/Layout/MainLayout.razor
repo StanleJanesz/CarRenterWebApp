@@ -1,0 +1,37 @@
+﻿@inherits LayoutComponentBase
+@{
+    bool login = false;
+}
+<div class="page">
+    @*do odkomentowania jesli nie zrobie przechodzenia*@
+@*     <div class="sidebar">
+        <NavMenu />
+    </div> *@
+
+    <main>
+        <div class="top-row px-4">
+            @if(login==false){
+            <NavLink class="nav-link" href="LogInPage">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Log in
+            </NavLink>
+            }
+            else{
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="UserProfilePage">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> UserProfilePage
+                </NavLink>
+            </div>
+            }
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

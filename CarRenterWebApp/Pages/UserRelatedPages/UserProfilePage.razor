@@ -1,0 +1,196 @@
+﻿<div style="background-color:black;height:120px;"></div>
+@page "/UserProfilePage"
+@using CarRenterWebApp.Classes
+@using CarRenterWebApp.Components
+@inject NavigationManager Navigation
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+<div class="container">
+	<Loading IsLoading="@isLoading" />
+	<AuthorizeView Roles=@UserAuth.readerRole>
+		<Authorized>
+
+			<div class="profile-header">
+				<img alt="Profile picture of the user" height="100" src="@context.User.FindFirst("picture")?.Value" width="100" />
+				<div class="info">
+					<h1>
+						@context.User.Identity.Name
+					</h1>
+					<p>
+						@context.User.FindFirst("email")?.Value
+					</p>
+
+					<p>
+						Date Of Birth: @user.BirthDate.Day.@user.BirthDate.Month.@user.BirthDate.Year
+					</p>
+					<p>
+						Addrress: @user.Location
+					</p>
+					<p>
+						Time of driving: @LicenseYears years
+					</p>
+				</div>
+				<a class="edit-profile-btn" href="EditProfilePage">
+					Edit Profile
+				</a>
+				<a class="log-out-btn" @onclick=BeginLogOut>
+					Log Out
+				</a>
+			</div>
+			<div>
+				<select @onchange="onFilterChange">
+					<option value=""></option>
+					<option value="active">Active</option>
+					<option value="toapprove">Ready to return</option>
+					<option value="returned">Returned</option>
+				</select>
+			</div>
+			<div class="history">
+				<h2>
+					History of Rented Cars
+				</h2>
+				@foreach (var item in filterrentals)
+				{
+					<div class="history-item">
+						@if (GetCarPhoto(item.Id) == null)
+						{
+							<img src="sample-data//CarImageFill.jpg" alt="Car" height="60" width="100">
+						}
+						else
+						{
+							<img src="data:image;base64, @System.Convert.ToBase64String(GetCarPhoto(item.Id))" alt="Car" height="60" width="100">
+						}
+						<div class="details">
+							<h3>
+								@item.Car.Brand
+							</h3>
+							@if (item.Status == Rental.RentalStatus.Active)
+							{
+
+								<p>
+									Rented from @item.RentalStartDate.ToShortDateString() . Give back by @item.RentalEndDate.ToShortDateString();
+								</p>
+								<NavLink class="nav-link" @onclick="() => OnClickReturnCarHandler(item)">
+									<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Return Car
+								</NavLink>
+							}
+							else if (item.Status == Rental.RentalStatus.ReadyToReturn)
+							{
+								<p>
+									Is waiting to be accepted Rented from @item.RentalStartDate.ToShortDateString() . Should be given back by @item.RentalEndDate.ToShortDateString();
+								</p>
+								<NavLink class="nav-link" @onclick="() => OnClickPendingCarHandler(item)">
+									<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span>  View details of rental
+								</NavLink>
+							}
+							else
+							{
+								<p>
+									Rented from @item.RentalStartDate.ToShortDateString() to @item.RentalEndDate.ToShortDateString()
+								</p>
+								<NavLink class="nav-link" @onclick="() => OnClickHistoryHandler(item)">
+									<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> View details of rental
+								</NavLink>
+							}
+						</div>
+					</div>
+				}
+
+			</div>
+		</Authorized>
+		<NotAuthorized>
+		</NotAuthorized>
+		<Authorizing>
+			<p>Authorizing...</p>
+		</Authorizing>
+	</AuthorizeView>
+	<AuthorizeView Roles=@UserAuth.workerRole>
+		<Authorized>
+			<div class="profile-header">
+				<img alt="Profile picture of the user" height="100" src="@context.User.FindFirst("picture")?.Value" width="100" />
+				<div class="info">
+					<h1>
+						@context.User.Identity.Name
+					</h1>
+					<p>
+						@context.User.FindFirst("email")?.Value
+					</p>
+
+					<p>
+						Date Of Birth: @user.BirthDate.Day.@user.BirthDate.Month.@user.BirthDate.Year
+					</p>
+				</div>
+				<a class="edit-profile-btn" href="EditProfilePage">
+					Edit Profile
+				</a>
+				<a class="log-out-btn" @onclick=BeginLogOut>
+					Log Out
+				</a>
+			</div>
+			<div>
+				<select @onchange="onFilterChange">
+					<option value=""></option>
+					<option value="toapprove">to approve</option>
+					<option value="returned">returned</option>
+					<option value="active">in operation</option>
+				</select>
+			</div>
+			@* po pizzy sort *@
+			<div class="history">
+				<h2>
+					Cars Rented by Company Users
+				</h2>
+				@foreach (var item in filterrentals)
+				{
+					<div class="history-item">
+						@if (GetCarPhoto(item.Id) == null)
+						{
+							<img src="sample-data//CarImageFill.jpg" alt="Car" height="60" width="100">
+						}
+						else
+						{
+							<img src="data:image;base64, @System.Convert.ToBase64String(GetCarPhoto(item.Id))" alt="Car" height="60" width="100">
+						}
+						<div class="details">
+							<h3>
+								@item.Car.Brand
+							</h3>
+							@if (item.Status == Rental.RentalStatus.ReadyToReturn)
+							{
+								<p>
+									Rented from @item.RentalStartDate.ToShortDateString() . Given back by @item.RentalEndDate.ToShortDateString();
+								</p>
+								<NavLink class="nav-link" @onclick="() => OnClickGetCarBackHandler(item)">
+									<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Recieve car
+								</NavLink>
+							}
+							else if (item.Status == Rental.RentalStatus.Active)
+							{
+								<p>
+									Rented from @item.RentalStartDate.ToShortDateString() . Should be given back by @item.RentalEndDate.ToShortDateString();
+								</p>
+								<NavLink class="nav-link" @onclick="() => OnClickActiveCarHandler(item)">
+									View details of rental
+								</NavLink>
+							}
+							else
+							{
+								<p>
+									Rented from @item.RentalStartDate.ToShortDateString() to @item.RentalEndDate.ToShortDateString()
+								</p>
+								<NavLink class="nav-link" @onclick="() => OnClickHistoryHandler(item)">
+									<span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> View details of rental
+								</NavLink>
+							}
+
+						</div>
+					</div>
+				}
+			</div>
+		</Authorized>
+	</AuthorizeView>
+</div>
+

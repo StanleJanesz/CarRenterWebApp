@@ -1,0 +1,158 @@
+﻿.offer-details {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: black;
+    width:30%;
+}
+
+table {
+    border-collapse: collapse;
+    border: 2px solid rgb(140 140 140);
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+caption {
+    caption-side: bottom;
+    padding: 10px;
+    font-weight: bold;
+}
+
+thead,
+tfoot {
+    background-color: rgb(228 240 245);
+}
+
+th,
+td {
+    border: 1px solid rgb(160 160 160);
+    padding: 8px 10px;
+}
+
+    td:last-of-type {
+        text-align: center;
+    }
+
+tbody > tr:nth-of-type(even) {
+    background-color: rgb(237 238 242);
+}
+
+tfoot th {
+    text-align: right;
+}
+
+tfoot td {
+    font-weight: bold;
+}
+
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip {
+    visibility: hidden;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-wrapper:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%; /* Arrow pointing downwards */
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+button[disabled] {
+    cursor: not-allowed;
+}
+
+
+
+
+
+
+/* Car listing container styling */
+.car-listing {
+    display: flex; /* Flexbox for layout */
+    align-items: center; /* Center items vertically */
+    margin-bottom: 20px; /* Spacing between car listings */
+    padding: 15px; /* Padding inside the car listing */
+    border: 2px solid #ccc; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #fff; /* White background */
+    transition: box-shadow 0.3s, transform 0.3s; /* Smooth transition for hover effects */
+}
+
+    /* Hover effect for car listing */
+    .car-listing:hover {
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+        transform: translateY(-2px); /* Slight lift effect on hover */
+    }
+
+    /* Image styling */
+    .car-listing img {
+        width: 100px; /* Fixed width for images */
+        height: auto; /* Auto height */
+        margin-right: 20px; /* Spacing to the right of the image */
+        border-radius: 5px; /* Rounded corners for images */
+    }
+
+    /* Text styling for car brand and model */
+    .car-listing .car-brand {
+        font-size: 1.2em; /* Larger font size for brand */
+        font-weight: bold; /* Bold text for brand */
+        color: #333; /* Darker text color */
+        margin-right: 20px; /* Spacing between brand and model */
+    }
+
+    .car-listing .car-model {
+        font-size: 1em; /* Standard font size for model */
+        color: #555; /* Slightly lighter text color */
+        margin-right: auto; /* Pushes the model to the left */
+    }
+
+/* Navigation link styling */
+.nav-link {
+    display: flex; /* Flexbox for icon and text */
+    align-items: center; /* Center items vertically */
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text */
+    padding: 8px 12px; /* Padding inside the link */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underline */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+    .nav-link:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+    }
+
+    /* Icon styling */
+    .nav-link .bi {
+        margin-right: 5px; /* Spacing between icon and text */
+    }

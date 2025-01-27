@@ -1,0 +1,50 @@
+﻿.car-details {
+    background-color: #f9f9f9; /* Light background for contrast */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 20px; /* Spacing inside the container */
+    margin: 20px; /* Spacing outside the container */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Car brand and model styling */
+.car-brand,
+.car-model {
+    font-size: 1.5em; /* Larger font size for emphasis */
+    color: #333; /* Darker text color */
+    margin: 10px 0; /* Spacing between elements */
+}
+
+/* Return date styling */
+.return-date {
+    font-size: 1em; /* Standard font size */
+    color: #666; /* Lighter text color */
+    margin-bottom: 20px; /* Spacing below the return date */
+}
+
+/* Button styling */
+.return-button {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* White text */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 15px; /* Padding inside the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition */
+}
+
+    .return-button:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+    }
+
+/* Navigation link styling */
+.nav-link {
+    display: inline-block; /* Inline block for spacing */
+    margin-top: 10px; /* Spacing above the link */
+    color: #007bff; /* Link color */
+    text-decoration: none; /* No underline */
+}
+
+    .nav-link:hover {
+        text-decoration: underline; /* Underline on hover */
+    }

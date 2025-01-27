@@ -1,0 +1,60 @@
+﻿.offer-details {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px;
+    background-color: #f9f9f9;
+    color: black;  Ensure all text is black 
+    max-width: 600px;
+}
+
+.image img {
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+h4 {
+    margin-bottom: 10px;
+    color: black;  Ensure headers are black 
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+p {
+    margin: 5px 0;
+    color: black;  Ensure all paragraph text is black 
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.sameRow {
+    flex: 1;
+    padding: 5px;
+}
+
+.confirmation {
+    text-align: center;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+
+.confirm-button {
+    background-color: #28a745;
+}
+
+.goback-button {
+    background-color: #dc3545;
+}

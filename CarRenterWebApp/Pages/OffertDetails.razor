@@ -1,0 +1,102 @@
+﻿@page "/OffertDetails"
+@using CarRenterWebApp.Classes
+@using CarRenterWebApp.Components
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CarService CarService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavManager
+<div style="background-color:black;height:120px;"></div>
+
+<PageTitle>OffertDetails</PageTitle>
+<Loading IsLoading="@isLoading" />
+<AuthorizeView Roles=@UserAuth.readerRole>
+
+            <Authorized>
+              
+        @if (offer != null)
+        {
+            <div class="offer-details">
+                @if (carPhoto != null)
+                {
+                    <div class="image">
+                        <img src="data:image;base64,@System.Convert.ToBase64String(carPhoto)" alt="Car" />
+                    </div>
+                }
+                else
+                {
+                    <div class="image">
+                        <img src="sample-data/CarImageFill.jpg" alt="Car" height="120" width="200" />
+                    </div>
+                }
+
+                
+                <div class="company-info">
+                    <h4>Company Information</h4>
+                    <p><strong>Company Name:</strong> @offer.CompanyInfo.Name</p>
+                    <p><strong>Address:</strong> @offer.CompanyInfo.Address</p>
+                    <p><strong>Contact:</strong> @offer.CompanyInfo.Contact</p>
+                </div>
+
+                
+                <div class="renter-info">
+                    <h4>Renter Information</h4>
+                    <p><strong>Email:</strong> @user.Email</p>
+                    <p><strong>Location:</strong> @user.Location</p>
+                    <p><strong>Birth Date:</strong> @user.BirthDate.ToShortDateString()</p>
+                    <p><strong>Driving License Since:</strong> @user.LicenseDate.ToShortDateString()</p>
+                </div>
+
+              
+                <div class="terms">
+                    <h4>Terms of Agreement</h4>
+                    <p>@offer.Terms</p>
+                </div>
+
+               
+                <div class="car-details">
+                    <h4>Car Details</h4>
+                    <p><strong>Brand:</strong> @offer.Car.Brand</p>
+                    <p><strong>Model:</strong> @offer.Car.Model</p>
+                    <p><strong>Year:</strong> @offer.Car.ProductionYear</p>
+                    <p><strong>Location:</strong> @offer.Car.Location</p>
+                </div>
+
+                <div class="car-details">
+                    <h4>Rented</h4>
+                    <p><strong> From:</strong> @offer.StartDate.ToShortDateString()</p>
+                    <p><strong>To:</strong> @offer.EndDate.ToShortDateString()</p>    
+                </div>
+                <div class="car-price">
+                    <h4>Pricing Details</h4>
+                    <p><strong>Total Price:</strong> @Math.Round(offer.TotalCost,2) zł</p>
+
+                        <p ><strong>Daily Car Rate:</strong> @Math.Round(offer.DailyCarRate,2) zł</p>
+
+                        <p ><strong>Daily Insurance Rate:</strong> @Math.Round(offer.DailyInsuranceRate,2) zł</p>
+
+                        <p ><strong>Other Daily Costs:</strong> @Math.Round(offer.DailyAdditionalRate,2) zł</p>
+
+                </div>
+
+               
+                <div class="confirmation">
+                    <p>
+                        Upon pressing confirm, an email will be sent to your address asking you to confirm your rental.
+                        Do you want to rent this car?
+                    </p>
+                    <button class="confirm-button" @onclick="onconfirm">Confirm</button>
+                    <button class="goback-button" @onclick="comeback">Go Back</button>
+                </div>
+            </div>
+        }
+
+
+
+    </Authorized>
+    <NotAuthorized>
+    </NotAuthorized>
+    <Authorizing>
+        <p>Authorizing...</p>
+    </Authorizing>
+</AuthorizeView>
+

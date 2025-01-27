@@ -1,0 +1,80 @@
+﻿    @page "/OffertView"
+@using CarRenterWebApp.Classes
+@using CarRenterWebApp.Components
+@using static CarRenterWebApp.Classes.RentalRequest
+@inject CarService CarService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<PageTitle>OffertView</PageTitle>
+<div style="background-color:black;height:120px;"></div>
+
+<Loading IsLoading="@isLoading" />
+<div class="offer-details">
+	<h4>Selected Car Details</h4>
+	@if (CarService.SelectedCar != null)
+	{
+		<p>Brand: @CarService.SelectedCar.Brand</p>
+		<p>Model: @CarService.SelectedCar.Model</p>
+	}
+	else
+	{
+		<p>No car selected.</p>
+	}
+
+	<select id="insurance" @onchange="Change" class="form-control">
+		<option value=@InsuranceTypes.Basic>Basic insurance</option>
+		<option value=@InsuranceTypes.Standard selected>Standard insurance</option>
+		<option value=@InsuranceTypes.Premium>Premium insurance</option>
+	</select>
+	<SortBox Type_="typeof(Offer)" Descriptions="@(["Oldest","Newest","Least expensive","Most Expensive"])" Change="SortChange" Qualities="@(["Car.ProductionYear","TotalCost"])" Sorted="offers"></SortBox>
+</div>
+<div>
+	@if (offers != null)
+	{
+		@for (int j = currentPage * pageAmount; j < PageLimit(); j++)
+		{
+			var i = j;
+			<div class="car-listing" style="padding 25px">
+				@if (currentCarsPhotos.Count <= i || currentCarsPhotos[i] == null)
+				{
+					<img src="sample-data//CarImageFill.jpg" alt="Car">
+				}
+				else
+				{
+					<img src="data:image;base64, @System.Convert.ToBase64String(currentCarsPhotos[i])" alt="Car">
+				}
+
+				<div style="margin-bottom: 10px; padding: 10px;">
+					<div>Rented by: @offers[i].CompanyInfo.Name</div>
+					<div>Year of production: @offers[i].Car.ProductionYear</div>
+					<div>Total Cost: @Math.Round(offers[i].TotalCost, 2) zl</div>
+				</div>
+
+
+				<AuthorizeView Roles=@UserAuth.readerRole>
+					<Authorized>
+						<div style="position:sticky; right: 0;">
+							<button class="nav-link" @onclick="() => OnClickHandler(i)" style="text-align: right;">
+								Rent from here
+							</button>
+						</div>
+					</Authorized>
+					<NotAuthorized>
+						<button class="nav-link" @onclick="() => OnClickHandler(i)" style="text-align: right;" disabled="true">
+							Rent from here
+						</button>
+						<div class="tooltip">Zaloguj sie aby skorzystać</div>
+					</NotAuthorized>
+				</AuthorizeView>
+			</div>
+
+
+		}
+	}
+
+</div>
+<Paging maxPages="@maxPages" currentPage="@currentPage" OnChange="@OnPageChange"></Paging>
+
+

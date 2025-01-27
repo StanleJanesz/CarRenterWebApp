@@ -1,0 +1,12 @@
+@CarRenterAPI_HostAddress = http://localhost:5281
+
+GET {{CarRenterAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{CarRenterAPI_HostAddress}}/Car/GetCars
+Accept: application/json
+
+###
+

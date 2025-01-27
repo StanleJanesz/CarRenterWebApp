@@ -1,0 +1,30 @@
+﻿<div style="background-color:black;height:120px;"></div>
+@page "/authentication/{action}"
+	@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+	@using Blazored.LocalStorage
+	@using CarRenterWebApp.Classes
+	@using System.Security.Claims
+	@inject ILocalStorageService localStorage
+	@inject NavigationManager Navigation
+<RemoteAuthenticatorView Action="@Action" OnLogOutSucceeded="HandleLogOutSucceeded" OnLogInSucceeded="HandleLoginSucceeded" />
+
+@code {
+
+	[Parameter] public string? Action { get; set; }
+
+	[CascadingParameter]
+	private Task<AuthenticationState> authenticationStateTask { get; set; }
+	private async Task HandleLogOutSucceeded(RemoteAuthenticationState arg)
+	{
+		await localStorage.ClearAsync();
+		Navigation.NavigateTo("/");
+	}
+
+	private async Task HandleLoginSucceeded(RemoteAuthenticationState arg)
+	{
+		var authState = await authenticationStateTask;
+		UserAuth.SetRole(authState.User);
+	}
+
+
+}
